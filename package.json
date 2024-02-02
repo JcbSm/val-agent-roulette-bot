@@ -1,0 +1,26 @@
+{
+  "name": "val-agent-roulette",
+  "version": "1.0.0",
+  "description": "A Discord bot for the Valorant Agent Roulette Minigame",
+  "main": "./build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js",
+    "start:dev": "npx nodemon"
+  },
+  "author": "JcbSm",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.13",
+    "nodemon": "^3.0.3",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1",
+    "winston": "^3.11.0"
+  }
+}

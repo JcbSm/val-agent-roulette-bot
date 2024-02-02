@@ -1,0 +1,8 @@
+# Build
+/build/
+
+# Modules
+/node_modules/
+
+# Credentials
+.env
