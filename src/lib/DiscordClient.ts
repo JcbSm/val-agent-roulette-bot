@@ -1,11 +1,12 @@
-import { Client } from "discord.js";
+import { Client, Message, User } from "discord.js";
 import { Logger, createLogger, format } from "winston";
 import { Console } from "winston/lib/winston/transports";
+import { Player } from "./Player";
 
 /**
  * The Discord bot client
  */
-export class RouletteClient extends Client {
+export class DiscordClient extends Client {
 
     private _logger: Logger;
 
@@ -35,8 +36,30 @@ export class RouletteClient extends Client {
     /**
      * Get the logger
      */
-    public get logger() {
+    public get logger(): Logger {
         return this._logger;
+    }
+
+    /**
+     * Loads the application commands
+     */
+    public async loadApplicationCommands(): Promise<void> {
+
+
+
+    }
+
+    /**
+     * Sends the selection message to the user's DM
+     * @param user The user to send to.
+     * @returns The message that has been sent.
+     */
+    public async sendDM(user: User): Promise<Message> {
+        return user.send("NOT YET IMPLEMENTED");
+    }
+
+    public async getChoice(player: Player) {
+        
     }
 
 }

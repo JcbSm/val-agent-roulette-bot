@@ -1,5 +1,4 @@
-import { RouletteClient } from "./lib/RouletteClient";
-
+import { DiscordClient } from './lib/DiscordClient';
 
 async function main() {
 
@@ -7,7 +6,7 @@ async function main() {
     (await import ('dotenv')).config();
 
     // Initialise client
-    const client = new RouletteClient();
+    const client = new DiscordClient();
     
     // Attempt to log in.
     try {
@@ -18,6 +17,9 @@ async function main() {
         await client.login(process.env.TOKEN);
 
         client.logger.info("Logged in.");
+
+        // Load the commands
+        client.loadApplicationCommands();
 
     } catch (err) {
         client.logger.error(err);
