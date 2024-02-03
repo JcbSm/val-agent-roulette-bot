@@ -14,10 +14,6 @@ export class GameManager {
         return this._client;
     }
 
-    public get games() {
-        return this._games;
-    }
-
     public create(): Game {
 
         // Create the game
