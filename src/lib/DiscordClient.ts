@@ -1,4 +1,4 @@
-import { Client, Message, User } from "discord.js";
+import { Client, Events, Message, User } from "discord.js";
 import { Logger, createLogger, format } from "winston";
 import { Console } from "winston/lib/winston/transports";
 import { Player } from "./games/Player";
@@ -52,46 +52,31 @@ export class DiscordClient extends Client {
         return this._games;
     }
 
+    /**
+     * The command handler
+     */
     public get commands(): CommandHandler {
         return this._commands;
     }
 
     /**
-     * Loads the application commands
+     * Registers event listeners for each command
      */
-    public async loadApplicationCommands(): Promise<void> {
+    public registerListeners() {
 
-        this.logger.verbose("Registering commands...");
+        this.logger.verbose("Registering command listeners...");
 
-        // Get commands
-        const commands = [
-            {
-                "name": "start",
-                "description": "Start a game of Agent Roulette"
-            }
-        ]
+        // Iterate through commands
+        for (const [name, command] of this.commands.cache) {
 
-        if (this.application) {
+            this.logger.verbose(`Registering listener for \`${name}\` command`);
 
-            // Guild counter
-            let i = 0;
+            // Add event listener for each command
+            this.on(Events.InteractionCreate, (i) => command.run(i));
 
-            // Iterate through guilds
-            for (const [guild_id, guild] of (await this.guilds.fetch())) {
+        }
 
-                // Register commands for this guild
-                await this.application.commands.set(commands, guild_id);
-
-                this.logger.verbose(`Registered commands for guild ${guild_id} ${guild.name}`);
-
-                // Increment counter
-                i++;
-
-            }
-
-            this.logger.info(`Registered application commands for ${i} guilds.`);
-
-        } else throw new Error("Client application not found. Unable to register commands.");
+        this.logger.info("Registered command listeners.");
 
     }
 

@@ -8,6 +8,6 @@ export default class extends ChatInputCommand {
     }
 
     public async chatInputRun(interaction: ChatInputCommandInteraction) {
-        
+        interaction.reply("Starting...");
     }
 }

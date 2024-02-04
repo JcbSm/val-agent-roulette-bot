@@ -13,16 +13,33 @@ export class CommandHandler {
     private logger: Logger;
     private dir = path.join(__dirname, "..", "..", "commands");
 
+    /**
+     * Creates a new CommandHandler
+     * @param client The DiscordClient
+     */
     constructor(client: DiscordClient) {
         this._client = client;
         this.logger = LoggerFactory.create(CommandHandler.name);
         this._commands = new Map();
     }
 
+    /**
+     * The DiscordClient
+     */
     public get client(): DiscordClient {
         return this._client;
     }
 
+    /**
+     * The application command cache
+     */
+    public get cache(): Map<string, Command> {
+        return this._commands;
+    }
+
+    /**
+     * Loads the commands from file into the cache
+     */
     public async load(): Promise<void> {
 
         this.logger.debug(`Command directory: ${this.dir}`);
@@ -48,10 +65,14 @@ export class CommandHandler {
 
         this.logger.verbose("Located all command files.");
         
+        // Register the commands to Discord
         return this.registerCommands();
 
     }
 
+    /**
+     * Registers the commands to each guild
+     */
     public async registerCommands(): Promise<void> {
 
         this.logger.verbose("Registering commands...");
@@ -75,6 +96,9 @@ export class CommandHandler {
             }
 
             this.logger.info(`Registered application commands for ${i} guilds.`);
+
+            // Register listeners
+            this.client.registerListeners();
 
         } else throw new Error("Client application not found. Unable to register commands.");
 
