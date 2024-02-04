@@ -1,5 +1,5 @@
 import { Collection, Snowflake } from "discord.js";
-import { DiscordClient } from "./DiscordClient";
+import { DiscordClient } from "../DiscordClient";
 import { Player } from "./Player";
 
 /**

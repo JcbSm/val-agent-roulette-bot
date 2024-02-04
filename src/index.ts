@@ -19,7 +19,9 @@ async function main() {
         client.logger.info("Logged in.");
 
         // Load the commands
-        client.loadApplicationCommands();
+        await client.commands.load();
+
+        client.logger.info("Ready.");
 
     } catch (err) {
         client.logger.error(err);

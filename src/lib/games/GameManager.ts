@@ -1,4 +1,4 @@
-import { DiscordClient } from "./DiscordClient";
+import { DiscordClient } from "../DiscordClient";
 import { Game } from "./Game";
 
 export class GameManager {

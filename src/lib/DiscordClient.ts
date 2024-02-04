@@ -1,8 +1,10 @@
 import { Client, Message, User } from "discord.js";
 import { Logger, createLogger, format } from "winston";
 import { Console } from "winston/lib/winston/transports";
-import { Player } from "./Player";
-import { GameManager } from "./GameManager";
+import { Player } from "./games/Player";
+import { GameManager } from "./games/GameManager";
+import { CommandHandler } from "./commands/CommandHandler";
+import { LoggerFactory } from "./LoggerFactory";
 
 /**
  * The Discord bot client
@@ -10,7 +12,8 @@ import { GameManager } from "./GameManager";
 export class DiscordClient extends Client {
 
     private _logger: Logger;
-    private _games: GameManager
+    private _games: GameManager;
+    private _commands: CommandHandler;
 
     /**
      * Creates a new instnace of the client
@@ -26,16 +29,13 @@ export class DiscordClient extends Client {
             ]
         })
 
-        this._logger = createLogger({               // idk what this does but its how u do it i guess
-            // Set level
-            level: process.env.LOG_LEVEL || 'info',
-            // CLI output
-            format: format.cli(),
-            transports: [new Console()]
-        });
+        this._logger = LoggerFactory.create(DiscordClient.name);
 
         // Create game manager
         this._games = new GameManager(this);
+        
+        // Create command handler
+        this._commands = new CommandHandler(this);
     }
 
     /**
@@ -50,6 +50,10 @@ export class DiscordClient extends Client {
      */
     public get games(): GameManager {
         return this._games;
+    }
+
+    public get commands(): CommandHandler {
+        return this._commands;
     }
 
     /**
