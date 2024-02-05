@@ -112,7 +112,12 @@ export class Game {
                     new ButtonBuilder()
                         .setCustomId("leave")
                         .setEmoji("❌")
-                        .setStyle(ButtonStyle.Secondary)
+                        .setStyle(ButtonStyle.Secondary),
+
+                    new ButtonBuilder()
+                        .setCustomId("start")
+                        .setLabel("Start")
+                        .setStyle(ButtonStyle.Success)
                 ])
         ]
     }

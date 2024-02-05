@@ -35,6 +35,14 @@ export default class extends ChatInputCommand {
                 case "leave":
                     game.removePlayer(i.user);
                     break;
+                case "start":
+
+                    if (i.user.id == game.host.id) {
+                        // start
+                    } else {
+                        i.reply({ ephemeral: true, content: "❌ Only the host can start."});
+                    }
+                    return;
 
             }
 
