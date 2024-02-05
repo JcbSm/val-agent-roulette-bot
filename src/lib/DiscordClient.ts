@@ -64,8 +64,8 @@ export class DiscordClient extends Client {
      * @param user The user to send to.
      * @returns The message that has been sent.
      */
-    public async sendDM(user: User): Promise<Message> {
-        return user.send("NOT YET IMPLEMENTED");
+    public async sendDM(user: User): Promise<Message<false>> {
+        return user.send("Starting...");
     }
 
     public async getChoice(player: Player) {

@@ -31,6 +31,10 @@ export default class extends ChatInputCommand {
                     game.addPlayer(new Player(i.user, 1))
                     break;
                 case "options":
+                    if (i.user.id == game.host.id) {
+                        i.reply({ ephemeral: true, content: "Not yet implemented." });
+                        return;
+                    }
                     break;
                 case "leave":
                     game.removePlayer(i.user);
@@ -38,11 +42,11 @@ export default class extends ChatInputCommand {
                 case "start":
 
                     if (i.user.id == game.host.id) {
-                        // start
+                        game.start();
                     } else {
                         i.reply({ ephemeral: true, content: "❌ Only the host can start."});
+                        return;
                     }
-                    return;
 
             }
 

@@ -1,4 +1,5 @@
 import { Message, User } from "discord.js"
+import { Agent } from "../valorant/Agent";
 
 export type Team = 0 | 1;
 
@@ -11,6 +12,8 @@ export class Player {
     private _message: Message<false> | null = null;
     private _team: Team;
 
+    private _agents: Set<Agent>;
+
     /**
      * Creates a new Player instance
      * @param user The Discord user
@@ -18,6 +21,8 @@ export class Player {
     constructor(user: User, team: Team) {
         this._user = user;
         this._team = team;
+
+        this._agents = new Set();
     }
 
     /**
@@ -33,6 +38,10 @@ export class Player {
 
     public get team() {
         return this._team;
+    }
+
+    public get agents() {
+        return this._agents;
     }
 
     public setMessage(message: Message<false>) {
