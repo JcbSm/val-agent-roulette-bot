@@ -1,5 +1,5 @@
 import { Message, User } from "discord.js"
-import { Agent } from "../valorant/Agent";
+import { Agent } from "../valorant/Agents";
 
 export type Team = 0 | 1;
 
@@ -50,6 +50,18 @@ export class Player {
 
     public setTeam(team: Team) {
         this._team = team;
+    }
+
+    public hasAgent(agent: Agent) {
+        return this._agents.has(agent);
+    }
+
+    public addAgent(agent: Agent) {
+        this._agents.add(agent);
+    }
+
+    public removeAgent(agent: Agent) {
+        this._agents.delete(agent);
     }
 
 }

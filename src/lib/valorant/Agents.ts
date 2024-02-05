@@ -26,8 +26,12 @@ export class Agent {
     
     }
 
-    public get name() {
+    public get name(): string {
         return this._name;
+    }
+
+    public get nameLowerCase(): string {
+        return this._name.toLocaleLowerCase().replace(/\W/g, '');
     }
 
     public get emojiID() {

@@ -3,6 +3,8 @@ import { DiscordClient } from "../DiscordClient";
 import { Player } from "./Player";
 import { Logger } from "winston";
 import { LoggerFactory } from "../LoggerFactory";
+import { agents } from "../valorant/Agents";
+import { MessageComponentUtil } from "../MessageComponentUtil";
 
 export enum GamePhase {
     LOBBY,
@@ -205,9 +207,55 @@ export class Game {
 
     }
 
-    public async selectAgents(player: Player) {
+    public async selectAgents(player: Player): Promise<void> {
 
-        await player.message?.edit({})
+        return new Promise(async (resolve, reject) => {
+
+            // If no message, reject & error
+            if (player.message) {
+                
+                // Edit the message
+                await player.message.edit({ content: 'Select the agents you have unlocked', components: MessageComponentUtil.getAgentButtons(player, agents.filter(a => !a.starter))})
+    
+                // Create a collector for interactinos
+                const collector = player.message.createMessageComponentCollector({ filter: (i) => i.isButton(), time: 60 * 1000 });
+
+                // On collect
+                collector.on('collect', (interaction: ButtonInteraction) => {
+                    
+                    this.logger.debug(`${interaction.user.username} selected button ${interaction.customId}`);
+
+                    // If it was a select button
+                    if (interaction.customId.startsWith("select_")) {
+
+                        // Find the agent
+                        const agent = agents.find(a => a.nameLowerCase == interaction.customId.replace("select_", ""));
+
+                        // If no agent, do nothing
+                        if (!agent) throw new Error("Unknown agent");
+
+                        // Toggle the agent
+                        player.hasAgent(agent) ? player.removeAgent(agent) : player.addAgent(agent);
+
+                        // Update the message accordingly
+                        interaction.update({ components: MessageComponentUtil.getAgentButtons(player, agents.filter(a => !a.starter))});
+
+                    }
+
+                })
+
+                collector.on('end', _ => {
+
+
+                    
+                })
+
+            } else {
+                reject(new Error(`No DM message found for ${player.user.username}`)); 
+            }
+
+        })
+
 
     }
 
