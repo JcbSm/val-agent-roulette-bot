@@ -4,6 +4,7 @@ import { readdirSync } from "fs";
 import { Logger } from "winston";
 import { LoggerFactory } from "../LoggerFactory";
 import { Command } from "./Command";
+import { Events, Guild } from "discord.js";
 
 export class CommandHandler {
 
@@ -77,30 +78,57 @@ export class CommandHandler {
 
         this.logger.verbose("Registering commands...");
 
-        if (this.client.application) {
+        // Guild counter
+        let i = 0;
 
-            // Guild counter
-            let i = 0;
+        // Iterate through guilds
+        for (const [_, guild] of (await this.client.guilds.fetch())) {
 
-            // Iterate through guilds
-            for (const [guild_id, guild] of (await this.client.guilds.fetch())) {
+            // Register guild command
+            await this.registerGuildCommands(await guild.fetch());
 
-                // Register commands for this guild
-                await this.client.application.commands.set([...this._commands.values()], guild_id);
+            // Increment counter
+            i++;
 
-                this.logger.verbose(`Registered commands for guild ${guild_id} ${guild.name}`);
+        }
 
-                // Increment counter
-                i++;
+        this.logger.info(`Registered application commands for ${i} guilds.`);
 
-            }
-
-            this.logger.info(`Registered application commands for ${i} guilds.`);
-
-            // Register listeners
-            this.client.registerListeners();
-
-        } else throw new Error("Client application not found. Unable to register commands.");
+        // Register listeners
+        this.registerListeners();
 
     }
+
+    public async registerGuildCommands(guild: Guild) {
+
+        // Assert application exists
+        if (this.client.application == null) throw new Error(`Client application not found. Unable to register commands for guild ${guild.id}`)
+
+        // Register commands for this guild
+        await this.client.application.commands.set([...this._commands.values()], guild.id);
+
+        this.logger.verbose(`Registered commands for guild ${guild.id} ${guild.name}`);
+
+    }
+
+        /**
+     * Registers event listeners for each command
+     */
+        public registerListeners() {
+
+            this.logger.verbose("Registering command listeners...");
+    
+            // Iterate through commands
+            for (const [name, command] of this.cache) {
+    
+                this.logger.verbose(`Registering listener for \`${name}\` command`);
+    
+                // Add event listener for each command
+                this.client.on(Events.InteractionCreate, (i) => command.run(i));
+    
+            }
+    
+            this.logger.info("Registered command listeners.");
+    
+        }
 }

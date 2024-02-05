@@ -60,27 +60,6 @@ export class DiscordClient extends Client {
     }
 
     /**
-     * Registers event listeners for each command
-     */
-    public registerListeners() {
-
-        this.logger.verbose("Registering command listeners...");
-
-        // Iterate through commands
-        for (const [name, command] of this.commands.cache) {
-
-            this.logger.verbose(`Registering listener for \`${name}\` command`);
-
-            // Add event listener for each command
-            this.on(Events.InteractionCreate, (i) => command.run(i));
-
-        }
-
-        this.logger.info("Registered command listeners.");
-
-    }
-
-    /**
      * Sends the selection message to the user's DM
      * @param user The user to send to.
      * @returns The message that has been sent.

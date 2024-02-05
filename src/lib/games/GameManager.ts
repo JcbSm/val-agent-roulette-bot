@@ -1,3 +1,4 @@
+import { User } from "discord.js";
 import { DiscordClient } from "../DiscordClient";
 import { Game } from "./Game";
 
@@ -14,10 +15,10 @@ export class GameManager {
         return this._client;
     }
 
-    public create(): Game {
+    public create(host: User): Game {
 
         // Create the game
-        const game = new Game(this.client);
+        const game = new Game(this.client, host);
 
         // Add to the set
         this._games.add(game);
